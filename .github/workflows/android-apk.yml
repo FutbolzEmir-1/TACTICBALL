@@ -29,7 +29,7 @@ jobs:
 
       - name: ZIP dosyasını aç
         run: |
-          unzip -q TACTICBALL-APK-Build-Source.zip -d source
+          unzip -qTACTICBALL-Logo-Guncellenmis-Kaynak.zip -d source
 
       - name: Android paketini kur
         working-directory: source/TACTICBALL-APK-Build
