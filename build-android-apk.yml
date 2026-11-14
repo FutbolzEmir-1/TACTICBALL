@@ -1,56 +1,40 @@
 
-name: TACTICBALL APK Oluştur
+name: TACTICBALL APK
 
 on:
   workflow_dispatch:
   push:
-    branches: [ main, ana ]
+    branches:
+      - ana
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Depoyu indir
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Node.js kur
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      - name: ZIP dosyasını aç
+      - name: Extract project
         run: |
-          ZIP=$(find . -maxdepth 1 -name "*.zip" | head -n 1)
-          mkdir -p app-source
-          unzip -q "$ZIP" -d app-source
-          PACKAGE=$(find app-source -name package.json | head -n 1)
-          echo "APP_DIR=$(dirname "$PACKAGE")" >> $GITHUB_ENV
+          unzip -o TACTICBALL-APK-Build-Source.zip -d app
+          find app -name package.json
 
-      - name: Android APK oluştur
+      - name: Build APK
         run: |
-          cd "$APP_DIR"
+          cd app
           npm install
-          npm install @capacitor/android@^7.4.3
+          npm install @capacitor/core @capacitor/cli @capacitor/android
           npm run build
           npx cap add android
           npx cap sync android
-
-      - name: Java kur
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '21'
-
-      - name: APK derle
-        run: |
-          cd "$APP_DIR/android"
+          cd android
           chmod +x gradlew
           ./gradlew assembleDebug
 
-      - name: APK dosyasını kaydet
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: TACTICBALL-APK
-          path: ${{ env.APP_DIR }}/android/app/build/outputs/apk/debug/app-debug.apk
-          
+          path: app/android/app/build/outputs/apk/debug/app-debug.apk
