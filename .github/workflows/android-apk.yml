@@ -1,1 +1,59 @@
 
+name: TACTICBALL APK
+
+'on':
+  workflow_dispatch:
+  push:
+    branches:
+      - ana
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Depoyu indir
+        uses: actions/checkout@v4
+
+      - name: Node.js kur
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Java kur
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: ZIP dosyasını aç
+        run: |
+          unzip -q TACTICBALL-APK-Build-Source.zip -d source
+
+      - name: Android paketini kur
+        working-directory: source/TACTICBALL-APK-Build
+        run: |
+          npm install
+          npm install @capacitor/android@^7.4.3
+
+      - name: Web uygulamasını oluştur
+        working-directory: source/TACTICBALL-APK-Build
+        run: npm run build
+
+      - name: Android projesini hazırla
+        working-directory: source/TACTICBALL-APK-Build
+        run: |
+          npx cap add android
+          npx cap sync android
+
+      - name: APK oluştur
+        working-directory: source/TACTICBALL-APK-Build/android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: APK dosyasını kaydet
+        uses: actions/upload-artifact@v4
+        with:
+          name: TACTICBALL-APK
+          path: source/TACTICBALL-APK-Build/android/app/build/outputs/apk/debug/app-debug.apk
