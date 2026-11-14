@@ -5,7 +5,8 @@ name: TACTICBALL APK
   workflow_dispatch:
   push:
     branches:
-      - ana
+  - main
+  - ana
 
 jobs:
   build:
