@@ -54,7 +54,10 @@ jobs:
           EOF
           npx cap add android
           npx cap sync android
-
+      - name: Uygulama simgesini güncelle
+        working-directory: source/TACTICBALL-APK-Build
+        run: |
+          cp -R android-icons/mipmap-* android/app/src/main/res/
       - name: APK oluştur
         working-directory: source/TACTICBALL-APK-Build/android
         run: |
