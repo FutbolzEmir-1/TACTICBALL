@@ -40,9 +40,17 @@ jobs:
         working-directory: source/TACTICBALL-APK-Build
         run: npm run build
 
-      - name: Android projesini hazırla
+            - name: Android projesini hazırla
         working-directory: source/TACTICBALL-APK-Build
         run: |
+          rm -f capacitor.config.ts
+          cat > capacitor.config.json <<'EOF'
+          {
+            "appId": "com.tacticball.game",
+            "appName": "TACTICBALL",
+            "webDir": "dist"
+          }
+          EOF
           npx cap add android
           npx cap sync android
 
