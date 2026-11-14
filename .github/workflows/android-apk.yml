@@ -34,7 +34,7 @@ jobs:
         working-directory: source/TACTICBALL-APK-Build
         run: |
           npm install --legacy-peer-deps
-          npm install @capacitor/android@^7.4.3
+          npm install @capacitor/android@^7.4.3 --legacy-peer-deps
 
       - name: Web uygulamasını oluştur
         working-directory: source/TACTICBALL-APK-Build
